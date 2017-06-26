@@ -52,7 +52,7 @@ var Field = React.createClass({
 			jsonName.unshift( React.DOM.span({ key:'f', className: 'jsonFixed' }) );
 		}
 		else{
-			jsonName.unshift( React.DOM.a({ key:'a', href: '#', className: 'jsonRemove', onClick: this.handleRemove}, 'x') );
+			jsonName.unshift( React.DOM.a({ key:'a', className: 'jsonRemove', onClick: this.handleRemove}, 'x') );
 		}
 
 		return React.DOM.div({className: className}, [
