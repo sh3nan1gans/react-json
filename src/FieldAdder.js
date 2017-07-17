@@ -19,7 +19,7 @@ var FieldAdder = React.createClass({
 
 	render: function(){
 		if( !this.state.creating )
-			return React.DOM.a({ className: 'jsonAdd', href: '#', onClick: this.handleCreate }, this.props.text );
+			return React.DOM.a({ className: 'jsonAdd', onClick: this.handleCreate }, this.props.text );
 
 		var options = this.getTypes().map( function( type ){
 				return React.DOM.option({value: type, key: type}, type[0].toUpperCase() + type.slice(1));
@@ -43,7 +43,7 @@ var FieldAdder = React.createClass({
 			fieldName,
 			React.DOM.select({ key: 's', value: this.state.type, onChange: this.changeType, ref: 'typeSelector'}, options),
 			React.DOM.button({ key: 'b', onClick: this.createField }, 'OK' ),
-			React.DOM.a({ key: 'a', href: '#', className: 'cancelField', onClick: this.handleCancel}, 'Cancel')
+			React.DOM.a({ key: 'a', className: 'cancelField', onClick: this.handleCancel}, 'Cancel')
 		]);
 	},
 
