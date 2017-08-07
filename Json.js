@@ -82,12 +82,22 @@ var Json = React.createClass({
 		};
 	},
 
+  componentWillMount: function() {
+    if (this.props.hiddenTypes) {
+      TypeField.registerHiddenTypes(this.props.hiddenTypes);
+    }
+  },
+
 	componentWillReceiveProps: function( newProps ){
 		if( !newProps.value.getListener ){
 			this.setState({updating: true, value: this.state.value.reset( newProps.value )});
 		}
 
 		this.setState( {defaults: this.createDefaults()} );
+
+		if (newProps.hiddenTypes) {
+		  TypeField.registerHiddenTypes(newProps.hiddenTypes);
+    }
 	},
 
 	render: function(){
@@ -104,6 +114,7 @@ var Json = React.createClass({
 					header: false,
 					order: settings.order
 				}),
+        hiddenTypes: this.state.hiddenTypes,
 				ref: 'value',
 				defaults: this.state.defaults,
 				id: this.state.id

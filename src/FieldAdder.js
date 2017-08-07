@@ -81,13 +81,13 @@ var FieldAdder = React.createClass({
 	createField: function(){
 		this.setState({creating: false});
 
-		var value = TypeField.prototype.components[ this.state.type ].prototype.defaultValue;
+		var value = TypeField.prototype.getComponents()[ this.state.type ].prototype.defaultValue;
 
 		this.props.onCreate( this.state.name, value, {type: this.state.type });
 	},
 
 	getTypes: function(){
-		return Object.keys( TypeField.prototype.components );
+		return Object.keys( TypeField.prototype.getComponents() );
 	}
 });
 

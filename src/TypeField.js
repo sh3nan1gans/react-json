@@ -10,6 +10,7 @@ var typeCheckOrder = [];
 
 var TypeField = React.createClass({
 	components: {},
+  hiddenTypes: [],
 	typeCheckOrder: [],
 
 	contextTypes: {
@@ -35,6 +36,20 @@ var TypeField = React.createClass({
 			ref: 'field'
 		});
 	},
+
+  getComponents: function() {
+    if (this.hiddenTypes.length > 0) {
+      var rtn = {};
+      for (var key in this.components) {
+        if (this.hiddenTypes.indexOf(key) === -1) {
+          rtn[key] = this.components[key];
+        }
+      }
+      return rtn;
+    } else {
+      return this.components;
+    }
+  },
 
 	getComponent: function(){
 		var type = this.props.type;
@@ -80,6 +95,10 @@ var TypeField = React.createClass({
 		}
  	}
 });
+
+TypeField.registerHiddenTypes = function(types) {
+  TypeField.prototype.hiddenTypes = types;
+}
 
 TypeField.registerType = function( name, Component, selectable ){
 	var proto = TypeField.prototype;
