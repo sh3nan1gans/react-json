@@ -1,7 +1,7 @@
 'use strict';
 
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Component } from 'react';
 import deepSettings from './deepSettings';
 import objectAssign from 'object-assign';
 
