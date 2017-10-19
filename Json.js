@@ -33,6 +33,8 @@ if( flexboxClass ){
  */
 class Json extends React.Component {
 	constructor(props) {
+		super(props);
+
 		var me = this,
 		value = this.props.value,
 		listener
@@ -56,21 +58,21 @@ class Json extends React.Component {
 			me.props.onChange( updated.toJS() );
 		});
 
+		this.defaultProps = {
+			value: {},
+			errors: false,
+			updating: false
+		}
+
+		this.propTypes = {
+			typeDefaults: PropTypes.object
+		}
+
 		this.state = {
 			value: value,
 			defaults: this.createDefaults(),
 			id: this.getId()
 		}
-	}
-
-	static defaultProps = {
-		value: {},
-		errors: false,
-		updating: false
-	}
-
-	static propTypes: {
-		typeDefaults: PropTypes.object
 	}
 
 	childContext() {
@@ -96,11 +98,11 @@ class Json extends React.Component {
     }
 	}
 
-	getValue = () => {
+	getValue() {
 		return this.state.value.toJS();
 	}
 
-	getValidationErrors = () => {
+	getValidationErrors() {
 		var jsonValue = this.getValue(),
 		errors = this.refs.value.getValidationErrors( jsonValue )
 		;
@@ -109,7 +111,7 @@ class Json extends React.Component {
 		return errors.length ? errors : false;
 	}
 
-	getDeepSettings = () => {
+	getDeepSettings() {
 		var settings = {};
 
 		for( var key in deepSettings ){
@@ -119,7 +121,7 @@ class Json extends React.Component {
 		return settings;
 	}
 
-	createDefaults = () => {
+	createDefaults() {
 		var settings = this.props.settings || {},
 		components = TypeField.prototype.components,
 		propDefaults = settings.defaults || {},
@@ -133,11 +135,11 @@ class Json extends React.Component {
 		return defaults;
 	}
 
-	getId = () => {
+	getId() {
 		return btoa( parseInt( Math.random() * 10000 ) ).replace(/=/g, '');
 	}
 
-	getFormSetting = ( settings, field, def ) => {
+	getFormSetting( settings, field, def ){
 		if( typeof settings[ field ] != 'undefined' )
 		return settings[ field ];
 		if( settings.form )

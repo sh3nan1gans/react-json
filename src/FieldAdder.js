@@ -8,11 +8,13 @@ import TypeField from './TypeField';
  *                           Otherwise an input will be shown to let the user define the key.
  */
 class FieldAdder extends React.Component {
-
-	state = {
+	constructor(props) {
+		super(props);
+		this.state = {
 			creating: this.props.creating || false,
 			name: this.props.name,
 			type: 'string'
+		}
 	}
 
 	componentDidUpdate( prevProps, prevState ) {
@@ -28,25 +30,25 @@ class FieldAdder extends React.Component {
 		this.setState({name: newProps.name});
 	}
 
-	handleCreate = ( e ) => {
+	handleCreate(e) {
 		e.preventDefault();
 		this.setState({creating: true});
 	}
 
-	handleCancel = ( e ) => {
+	handleCancel(e) {
 		e.preventDefault();
 		this.setState({creating: false});
 	}
 
-	changeType = ( e ) => {
+	changeType(e) {
 		this.setState({type: e.target.value});
 	}
 
-	changeKey = ( e ) => {
+	changeKey(e) {
 		this.setState({name: e.target.value});
 	}
 
-	createField = () => {
+	createField() {
 		this.setState({creating: false});
 
 		var value = TypeField.prototype.getComponents()[ this.state.type ].prototype.defaultValue;
@@ -54,7 +56,7 @@ class FieldAdder extends React.Component {
 		this.props.onCreate( this.state.name, value, {type: this.state.type });
 	}
 
-	getTypes = () => {
+	getTypes() {
 		return Object.keys( TypeField.prototype.getComponents() );
 	}
 
