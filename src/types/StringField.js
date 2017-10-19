@@ -1,35 +1,35 @@
-var React = require('react'),
-	LeafMixin = require('../../mixins/LeafFieldMixin')
-;
-
-
+import React, { Component } from 'react';
+import LeafMixin from '../../mixins/LeafFieldMixin';
 /**
  * Component for editing a string.
  * @param  {string} value The value of the string.
  * @param  {Mixed} original The value of the component it the original json.
  * @param {FreezerNode} parent The parent node to let the string component update its value.
  */
-var StringField = React.createClass({
-	mixins: [LeafMixin],
-	typeClass: 'jsonString',
-	inputType: 'text',
-	defaultValue: '',
+class StringField extends React.Component {
+	constructor(props) {
+		super(props)
 
-	getInitialState: function(){
-		return this.getStateFromProps( this.props );
-	},
+		this.state = {
+			mixins: [LeafMixin],
+			typeClass: 'jsonString',
+			inputType: 'text',
+			defaultValue: ''
+		}
+	}
 
-	render: function(){
-		return this.renderInput();
-	},
-
-	updateValue: function( e ){
+	updateValue( e ) {
 		this.setState({ value: e.target.value });
-	},
+	}
 
-	isType: function( value ){
+	isType( value ) {
 		return typeof value != 'object';
 	}
-});
+
+	render() {
+		return this.renderInput();
+	}
+
+};
 
 module.exports = StringField;

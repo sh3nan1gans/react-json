@@ -16,7 +16,7 @@ class ObjectField extends React.Component {
 		this.state = {
 			mixins: [CompoundFieldMixin],
 			editing: props.setting.editing || false,
-			fields: assign({}, props.settings && props.settings.fields || {})
+			fields: assign({}, props.settings && props.settings.fields || {}),
 			defaultValue: {}
 		}
 	}
