@@ -33,7 +33,7 @@ if( flexboxClass ){
  */
 class Json extends React.Component {
 	constructor(props) {
-		super(props);
+		super(props)
 
 		var me = this,
 		value = this.props.value,
@@ -66,9 +66,9 @@ class Json extends React.Component {
 	}
 
 	static defaultProps = {
-			value: {},
-			errors: false,
-			updating: false
+		value: {},
+		errors: false,
+		updating: false
 	}
 
 	static propTypes: {
@@ -80,13 +80,13 @@ class Json extends React.Component {
 	}
 
 
-  componentWillMount = () => {
+  componentWillMount() {
     if (this.props.hiddenTypes) {
       TypeField.registerHiddenTypes(this.props.hiddenTypes);
     }
-  },
+  }
 
-	componentWillReceiveProps = ( newProps ) => {
+	componentWillReceiveProps( newProps ) {
 		if( !newProps.value.getListener ){
 			this.setState({updating: true, value: this.state.value.reset( newProps.value )});
 		}
@@ -96,7 +96,7 @@ class Json extends React.Component {
 		if (newProps.hiddenTypes) {
 		  TypeField.registerHiddenTypes(newProps.hiddenTypes);
     }
-	},
+	}
 
 	getValue = () => {
 		return this.state.value.toJS();

@@ -15,7 +15,7 @@ class FieldAdder extends React.Component {
 			type: 'string'
 	}
 
-	componentDidUpdate = ( prevProps, prevState ) => {
+	componentDidUpdate( prevProps, prevState ) {
 		if( !prevState.creating && this.state.creating ){
 			if( this.refs.keyInput )
 			this.refs.keyInput.focus();
@@ -24,7 +24,7 @@ class FieldAdder extends React.Component {
 		}
 	}
 
-	componentWillReceiveProps = ( newProps ) => {
+	componentWillReceiveProps( newProps ) {
 		this.setState({name: newProps.name});
 	}
 
