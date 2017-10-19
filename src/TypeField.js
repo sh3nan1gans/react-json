@@ -22,6 +22,63 @@ class TypeField extends React.Component {
 		}
 	}
 
+	getComponents() {
+		if (this.state.hiddenTypes.length > 0) {
+			var rtn = {};
+			for (var key in this.state.components) {
+				if (this.state.hiddenTypes.indexOf(key) === -1) {
+					rtn[key] = this.state.components[key];
+				}
+			}
+			return rtn;
+		} else {
+			return this.state.components;
+		}
+	}
+
+	getComponent(){
+		var type = this.props.type;
+		if( !type )
+		type = this.guessType( this.props.value );
+
+		this.fieldType = type;
+
+		return this.state.components[ type ];
+	}
+
+	guessType( value ){
+		var type = false,
+		i = 0,
+		types = this.state.typeCheckOrder,
+		component
+		;
+
+		while( !type && i < types.length ){
+			component = this.state.components[ types[i] ].prototype;
+			if( component.isType && component.isType( value ) )
+			type = types[i++];
+			else
+			i++;
+		}
+
+		return type || 'object';
+	}
+
+	getValidationErrors( jsonValue ){
+		return this.refs.field.getValidationErrors( jsonValue );
+	}
+
+	addDeepSettings( settings ){
+		var parentSettings = this.props.parentSettings || {},
+		deep
+		;
+
+		for( var key in deepSettings ){
+			deep = deepSettings[ key ]( parentSettings[key], settings[key] );
+			if( typeof deep != 'undefined' )
+			settings[ key ] = deep;
+		}
+	}
 
 	render() {
 		var Component = this.getComponent(),
@@ -41,66 +98,8 @@ class TypeField extends React.Component {
 			id: this.props.id,
 			ref: 'field'
 		});
-	},
-
-  getComponents() {
-    if (this.state.hiddenTypes.length > 0) {
-      var rtn = {};
-      for (var key in this.state.components) {
-        if (this.state.hiddenTypes.indexOf(key) === -1) {
-          rtn[key] = this.state.components[key];
-        }
-      }
-      return rtn;
-    } else {
-      return this.state.components;
-    }
-  },
-
-	getComponent(){
-		var type = this.props.type;
-		if( !type )
-			type = this.guessType( this.props.value );
-
-		this.fieldType = type;
-
-		return this.state.components[ type ];
-	},
-
-	guessType( value ){
-		var type = false,
-			i = 0,
-			types = this.state.typeCheckOrder,
-			component
-		;
-
-		while( !type && i < types.length ){
-			component = this.state.components[ types[i] ].prototype;
-			if( component.isType && component.isType( value ) )
-				type = types[i++];
-			else
-				i++;
-		}
-
-		return type || 'object';
-	},
-
-	getValidationErrors( jsonValue ){
-		return this.refs.field.getValidationErrors( jsonValue );
-	},
-
-	addDeepSettings( settings ){
-		var parentSettings = this.props.parentSettings || {},
-			deep
-		;
-
-		for( var key in deepSettings ){
-			deep = deepSettings[ key ]( parentSettings[key], settings[key] );
-			if( typeof deep != 'undefined' )
-				settings[ key ] = deep;
-		}
- 	}
-});
+	}
+}
 
 TypeField.registerHiddenTypes = function(types) {
   TypeField.prototype.hiddenTypes = types;
