@@ -1,7 +1,5 @@
-var React = require('react'),
-	LeafMixin = require('../../mixins/LeafFieldMixin')
-;
-
+import React, { Component } from 'react';
+import LeafMixin from '../../mixins/LeafField';
 
 /**
  * Component for editing a password.
@@ -9,39 +7,41 @@ var React = require('react'),
  * @param  {Mixed} original The value of the component it the original json.
  * @param {FreezerNode} parent The parent node to let the password component update its value.
  */
-var PasswordField = React.createClass({
-	mixins: [LeafMixin],
-	typeClass: 'jsonPassword',
-	inputType: 'password',
-	defaultValue: '',
+class PasswordField extends React.Component {
+	constructor(props) {
+		super(props)
 
-	getInitialState: function(){
-		return this.getStateFromProps( this.props );
-	},
+		this.state = {
+			mixins: [LeafMixin],
+			typeClass: 'jsonPassword',
+			inputType: 'password',
+			defaultValue: '',
+		}
+	}
 
-	render: function(){
-		return this.renderInput();
-	},
-
-	getDisplayModeString: function(){
+	getDisplayModeString(){
 		return this.getWildcards();
-	},
+	}
 
-	getWildcards: function(){
+	getWildcards(){
 		var out = '';
 		for (var i = this.state.value.length - 1; i >= 0; i--) {
 			out += '*';
 		}
 		return out;
-	},
+	}
 
-	isType: function(){
+	isType(){
 		return false;
-	},
+	}
 
-	updateValue: function( e ){
+	updateValue( e ){
 		this.setState({ value: e.target.value });
 	}
-});
+
+	render(){
+		return this.renderInput();
+	}
+};
 
 module.exports = PasswordField;

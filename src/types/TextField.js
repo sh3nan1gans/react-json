@@ -1,6 +1,5 @@
-var React = require('react'),
-	LeafMixin = require('../../mixins/LeafFieldMixin')
-;
+import React, { Component } from 'react';
+import LeafMixin from '../../mixins/LeafFieldMixin';
 
 /**
  * Component for editing a long string.
@@ -8,15 +7,26 @@ var React = require('react'),
  * @param  {Mixed} original The value of the component it the original json.
  * @param {FreezerNode} parent The parent node to let the string component update its value.
  */
-var TextField = React.createClass({
-	mixins: [LeafMixin],
-	defaultValue: '',
+class TextField extends React.Component {
+	constructor(props) {
+		super(props)
 
-	getInitialState: function(){
-		return this.getStateFromProps( this.props );
-	},
+		this.state = {
+			mixins: [LeafMixin],
+			defaultValue: '',
+			...props,
+		}
+	}
 
-	render: function(){
+	updateValue( e ){
+		this.setState({ value: e.target.value });
+	}
+
+	isType( value ){
+		return typeof value == 'string' && value.length > 100;
+	}
+
+	render(){
 		var className = 'jsonText';
 
 		if( !this.state.editing )
@@ -30,15 +40,7 @@ var TextField = React.createClass({
 			onBlur: this.setValue,
 			ref: 'input'
 		});
-	},
-
-	updateValue: function( e ){
-		this.setState({ value: e.target.value });
-	},
-
-	isType: function( value ){
-		return typeof value == 'string' && value.length > 100;
 	}
-});
+};
 
 module.exports = TextField;
