@@ -9,6 +9,9 @@ var components = {};
 var typeCheckOrder = [];
 
 class TypeField extends React.Component {
+	constructor(props) {
+		super(props)
+	}
 
 	components: {},
   hiddenTypes: [],
