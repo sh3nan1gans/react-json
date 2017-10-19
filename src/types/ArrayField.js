@@ -1,33 +1,61 @@
 'use strict';
-
-var React = require('react'),
-	Field = require('../Field'),
-	assign = require('object-assign'),
-	CompoundFieldMixin = require('../../mixins/CompoundFieldMixin')
-;
+import React, { Component } from 'react';
+import Field from '../Field';
+import assign from 'object-assign';
+import CompoundFieldMixin from '../../mixins/CompoundFieldMixin';
 
 /**
  * Component for editing an array.
  * @param  {FreezerNode} value The value of the array.
  * @param  {Mixed} original The value of the component it the original json.
  */
-var ArrayField = React.createClass({
-	mixins: [CompoundFieldMixin],
+class ArrayField extends React.Component {
+	constructor(props) {
+		super(props)
 
-	getInitialState: function(){
-		return this.getStateFromProps( this.props );
-	},
-
-	getStateFromProps: function( props ){
-		return {
+		this.state = {
+			mixins: [CompoundFieldMixin],
 			editing: props.settings.editing || false,
-			fields: this.state && this.state.fields || {}
-		};
-	},
+			fields: this.state && this.state.fields || {},
+			defaultValue: {},
+		}
+	}
 
-	defaultValue: [],
+	getDefaultHeader() {
+		return 'List [' + this.props.value.length + ']';
+	}
 
-	render: function(){
+	getDefaultAdder() {
+		return '+ Add element';
+	}
+
+	updateField( key, value ) {
+		this.checkEditingSetting( key );
+		this.props.value.set( key, value );
+	}
+
+	deleteField( key ) {
+		var fields = {};
+
+		for( var index in this.state.fields ){
+			if( index > key ){
+				fields[ index - 1 ] = this.state.fields[ index ];
+			}
+			else if( index < key ){
+				fields[ index ] = this.state.fields[ index ];
+			}
+			// If they are equal we are deleting the element, do nothing
+		}
+
+		this.props.value.splice( key, 1 );
+		this.setState( { fields: fields } );
+	}
+
+	isType( value ) {
+		return value && value.constructor == Array;
+	}
+
+	render() {
 		var settings = this.props.settings,
 			className = this.state.editing ? 'open jsonArray jsonCompound' : 'jsonArray jsonCompound',
 			openArray = '',
@@ -69,41 +97,8 @@ var ArrayField = React.createClass({
 			this.renderHeader(),
 			openArray
 		]);
-	},
-
-	getDefaultHeader: function(){
-		return 'List [' + this.props.value.length + ']';
-	},
-
-	getDefaultAdder: function(){
-		return '+ Add element';
-	},
-
-	updateField: function( key, value ){
-		this.checkEditingSetting( key );
-		this.props.value.set( key, value );
-	},
-
-	deleteField: function( key ){
-		var fields = {};
-
-		for( var index in this.state.fields ){
-			if( index > key ){
-				fields[ index - 1 ] = this.state.fields[ index ];
-			}
-			else if( index < key ){
-				fields[ index ] = this.state.fields[ index ];
-			}
-			// If they are equal we are deleting the element, do nothing
-		}
-
-		this.props.value.splice( key, 1 );
-		this.setState( { fields: fields } );
-	},
-
-	isType: function( value ){
-		return value && value.constructor == Array;
 	}
-});
+
+};
 
 module.exports = ArrayField;
