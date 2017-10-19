@@ -1,16 +1,15 @@
 'use strict';
 
 import PropTypes from 'prop-types';
-
-var React = require('react'),
-	deepSettings = require('./deepSettings'),
-	objectAssign = require('object-assign')
-;
+import React from 'react';
+import deepSettings from './deepSettings';
+import objectAssign from 'object-assign';
 
 var components = {};
 var typeCheckOrder = [];
 
-var TypeField = React.createClass({
+class TypeField extends React.Component {
+
 	components: {},
   hiddenTypes: [],
 	typeCheckOrder: [],
