@@ -9,9 +9,8 @@ var components = {};
 var typeCheckOrder = [];
 
 class TypeField extends React.Component {
-	constructor(props) {
-		super(props)
-		this.state = {
+
+	state = {
 			components: {},
 			hiddenTypes: [],
 			typeCheckOrder: [],
@@ -20,9 +19,8 @@ class TypeField extends React.Component {
 				typeDefaults: PropTypes.object
 			},
 		}
-	}
 
-	getComponents() {
+	getComponents = () => {
 		if (this.state.hiddenTypes.length > 0) {
 			var rtn = {};
 			for (var key in this.state.components) {
@@ -36,7 +34,7 @@ class TypeField extends React.Component {
 		}
 	}
 
-	getComponent(){
+	getComponent = () => {
 		var type = this.props.type;
 		if( !type )
 		type = this.guessType( this.props.value );
@@ -46,7 +44,7 @@ class TypeField extends React.Component {
 		return this.state.components[ type ];
 	}
 
-	guessType( value ){
+	guessType = ( value ) => {
 		var type = false,
 		i = 0,
 		types = this.state.typeCheckOrder,
@@ -64,11 +62,11 @@ class TypeField extends React.Component {
 		return type || 'object';
 	}
 
-	getValidationErrors( jsonValue ){
+	getValidationErrors = ( jsonValue ) => {
 		return this.refs.field.getValidationErrors( jsonValue );
 	}
 
-	addDeepSettings( settings ){
+	addDeepSettings = ( settings ) => {
 		var parentSettings = this.props.parentSettings || {},
 		deep
 		;

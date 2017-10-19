@@ -1,19 +1,17 @@
 import PropTypes from 'prop-types';
-
-var React = require('react'),
-	Freezer = require('freezer-js'),
-	objectAssign = require('object-assign'),
-	TypeField = require('./src/TypeField'),
-	ObjectField = require('./src/types/ObjectField'),
-	ArrayField = require('./src/types/ArrayField'),
-	StringField = require('./src/types/StringField'),
-	BooleanField = require('./src/types/BooleanField'),
-	NumberField = require('./src/types/NumberField'),
-	TextField = require('./src/types/TextField'),
-	PasswordField = require('./src/types/PasswordField'),
-	SelectField = require('./src/types/SelectField'),
-	deepSettings = require('./src/deepSettings')
-;
+import React, { Component } from 'react';
+import Freezer from 'freezer-js';
+import objectAssign from 'object-assign'
+import TypeField from './src/TypeField'
+import ObjectField from './src/types/ObjectField'
+import ArrayField from './src/types/ArrayField'
+import StringField from './src/types/StringField'
+import BooleanField from './src/types/BooleanField'
+import NumberField from './src/types/NumberField'
+import TextField from './src/types/TextField'
+import PasswordField from './src/types/PasswordField'
+import SelectField from './src/types/SelectField'
+import deepSettings from './src/deepSettings'
 
 // Detect flexbox support
 var flexboxClass = typeof document != 'undefined' || '',
@@ -33,64 +31,62 @@ if( flexboxClass ){
  * @prop  {Object|FreezerNode} value The JSON object, value of the form.
  * @prop  {Object} settings Customization settings
  */
-var Json = React.createClass({
+class Json extends React.Component {
+	constructor(props) {
+		super(props);
 
-	getDefaultProps: function(){
-		return {
-			value: {},
-			errors: false,
-			updating: false
-		};
-	},
-
-	childContextTypes: {
-		typeDefaults: PropTypes.object
-	},
-
-	getChildContext: function(){
-		return {
-			typeDefaults: this.state.defaults
-		};
-	},
-
-	getInitialState: function(){
 		var me = this,
-			value = this.props.value,
-			listener
+		value = this.props.value,
+		listener
 		;
 
 		// If it is a freezer node
 		if( !value.getListener )
-			value = new Freezer( value ).get();
+		value = new Freezer( value ).get();
 
 		// Listen to changes
 		value.getListener().on('update', function( updated ){
 			if( me.state.updating )
-				return me.setState({ updating: false });
+			return me.setState({ updating: false });
 
 			me.setState({value: updated});
 
 			if( me.state.errors )
-				me.getValidationErrors();
+			me.getValidationErrors();
 
 			if( me.props.onChange )
-				me.props.onChange( updated.toJS() );
+			me.props.onChange( updated.toJS() );
 		});
 
-		return {
+		this.state = {
 			value: value,
 			defaults: this.createDefaults(),
 			id: this.getId()
-		};
-	},
+		}
+	}
 
-  componentWillMount: function() {
+	static defaultProps = {
+			value: {},
+			errors: false,
+			updating: false
+	}
+
+	static propTypes: {
+		typeDefaults: PropTypes.object
+	}
+
+	childContext() {
+		typeDefaults: this.state.defaults
+	}
+
+
+  componentWillMount = () => {
     if (this.props.hiddenTypes) {
       TypeField.registerHiddenTypes(this.props.hiddenTypes);
     }
   },
 
-	componentWillReceiveProps: function( newProps ){
+	componentWillReceiveProps = ( newProps ) => {
 		if( !newProps.value.getListener ){
 			this.setState({updating: true, value: this.state.value.reset( newProps.value )});
 		}
@@ -102,7 +98,55 @@ var Json = React.createClass({
     }
 	},
 
-	render: function(){
+	getValue = () => {
+		return this.state.value.toJS();
+	}
+
+	getValidationErrors = () => {
+		var jsonValue = this.getValue(),
+		errors = this.refs.value.getValidationErrors( jsonValue )
+		;
+
+		this.setState( {errors: errors.length} );
+		return errors.length ? errors : false;
+	}
+
+	getDeepSettings = () => {
+		var settings = {};
+
+		for( var key in deepSettings ){
+			settings[ key ] = deepSettings[ key ]( this, settings[key] );
+		}
+
+		return settings;
+	}
+
+	createDefaults = () => {
+		var settings = this.props.settings || {},
+		components = TypeField.prototype.components,
+		propDefaults = settings.defaults || {},
+		defaults = {}
+		;
+
+		for( var type in components ){
+			defaults[ type ] = objectAssign( {}, components[ type ].prototype.defaults || {}, propDefaults[ type ] || {});
+		}
+
+		return defaults;
+	}
+
+	getId = () => {
+		return btoa( parseInt( Math.random() * 10000 ) ).replace(/=/g, '');
+	}
+
+	getFormSetting = ( settings, field, def ) => {
+		if( typeof settings[ field ] != 'undefined' )
+		return settings[ field ];
+		if( settings.form )
+		return def;
+	}
+
+	render() {
 		var settings = this.props.settings || {},
 			ob = React.createElement( TypeField, {
 				type: 'object',
@@ -125,54 +169,8 @@ var Json = React.createClass({
 		;
 
 		return React.DOM.div({ className: className }, ob);
-	},
-
-	getValue: function(){
-		return this.state.value.toJS();
-	},
-
-	getValidationErrors: function(){
-		var jsonValue = this.getValue(),
-			errors = this.refs.value.getValidationErrors( jsonValue )
-		;
-
-		this.setState( {errors: errors.length} );
-		return errors.length ? errors : false;
-	},
-	getDeepSettings: function(){
-		var settings = {};
-
-		for( var key in deepSettings ){
-			settings[ key ] = deepSettings[ key ]( this, settings[key] );
-		}
-
-		return settings;
-	},
-	createDefaults: function(){
-		var settings = this.props.settings || {},
-			components = TypeField.prototype.components,
-			propDefaults = settings.defaults || {},
-			defaults = {}
-		;
-
-		for( var type in components ){
-			defaults[ type ] = objectAssign( {}, components[ type ].prototype.defaults || {}, propDefaults[ type ] || {});
-		}
-
-		return defaults;
-	},
-
-	getId: function(){
-		return btoa( parseInt( Math.random() * 10000 ) ).replace(/=/g, '');
-	},
-
-	getFormSetting: function( settings, field, def ){
-		if( typeof settings[ field ] != 'undefined' )
-			return settings[ field ];
-		if( settings.form )
-			return def;
 	}
-});
+};
 
 // Add global modifier functions
 Json.registerType = TypeField.registerType.bind( TypeField );

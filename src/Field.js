@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'React';
+import React from 'React';
 import objectAssign from 'object-assign';
 import Validation from './validation';
 import TypeField from './TypeField';
@@ -13,20 +13,16 @@ import TypeField from './TypeField';
  * @param {FreezerNode} parent The parent node to notify attribute updates.
  */
 class Field extends React.Component {
-	constructor(props) {
-		super(props)
-		this.state = {
-			error: false,
-		}
+
+	state = {
+		error: false,
 	}
 
-	getDefaultProps(){
-		return {
-			definition: {}
-		};
+	static defaultProps = {
+		definition: {}
 	}
 
-	renderTypeField( type, id ){
+	renderTypeField = ( type, id ) => {
 		var definition = this.props.definition,
 		settings = objectAssign( {}, definition.settings || {} ),
 		component
@@ -47,19 +43,19 @@ class Field extends React.Component {
 		return component;
 	}
 
-	renderReactField( definition ){
+	renderReactField = ( definition ) => {
 		return React.DOM.div( { className: 'jsonField reactField' }, definition.output );
 	}
 
-	handleRemove( e ){
+	handleRemove = ( e ) => {
 		this.props.onDeleted( this.props.name );
 	}
 
-	shouldComponentUpdate( nextProps, nextState ){
+	shouldComponentUpdate = ( nextProps, nextState )=> {
 		return nextProps.value != this.props.value || nextState.error != this.state.error;
 	}
 
-	onUpdated( value ){
+	onUpdated = ( value ) => {
 		var definition = this.props.definition;
 		if( this.props.value !== value ){
 			this.props.onUpdated( this.props.name, value );
@@ -68,7 +64,7 @@ class Field extends React.Component {
 		}
 	}
 
-	getValidationErrors( jsonValue ){
+	getValidationErrors = ( jsonValue ) => {
 		var childErrors = [],
 		validates = this.props.definition.validates,
 		name = this.props.name,
@@ -116,7 +112,7 @@ class Field extends React.Component {
 		return childErrors;
 	}
 
-	render(){
+	render() {
 		var definition = this.props.definition || {},
 			className = 'jsonField',
 			type = definition.type || TypeField.prototype.guessType( this.props.value ),

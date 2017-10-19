@@ -1,6 +1,5 @@
-var React = require('react'),
-	TypeField = require('./TypeField')
-;
+import React, { Component } from 'react';
+import TypeField from './TypeField';
 
 /**
  * Component to add fields to an Object or Array.
@@ -8,16 +7,58 @@ var React = require('react'),
  * @param  {string} name Optional. If provided, the attribute added will have that key (arrays).
  *                           Otherwise an input will be shown to let the user define the key.
  */
-var FieldAdder = React.createClass({
-	getInitialState: function(){
-		return {
+class FieldAdder extends React.Component {
+
+	state = {
 			creating: this.props.creating || false,
 			name: this.props.name,
 			type: 'string'
-		};
-	},
+	}
 
-	render: function(){
+	componentDidUpdate = ( prevProps, prevState ) => {
+		if( !prevState.creating && this.state.creating ){
+			if( this.refs.keyInput )
+			this.refs.keyInput.focus();
+			else
+			this.refs.typeSelector.focus();
+		}
+	}
+
+	componentWillReceiveProps = ( newProps ) => {
+		this.setState({name: newProps.name});
+	}
+
+	handleCreate = ( e ) => {
+		e.preventDefault();
+		this.setState({creating: true});
+	}
+
+	handleCancel = ( e ) => {
+		e.preventDefault();
+		this.setState({creating: false});
+	}
+
+	changeType = ( e ) => {
+		this.setState({type: e.target.value});
+	}
+
+	changeKey = ( e ) => {
+		this.setState({name: e.target.value});
+	}
+
+	createField = () => {
+		this.setState({creating: false});
+
+		var value = TypeField.prototype.getComponents()[ this.state.type ].prototype.defaultValue;
+
+		this.props.onCreate( this.state.name, value, {type: this.state.type });
+	}
+
+	getTypes = () => {
+		return Object.keys( TypeField.prototype.getComponents() );
+	}
+
+	render() {
 		if( !this.state.creating )
 			return React.DOM.a({ className: 'jsonAdd', onClick: this.handleCreate }, this.props.text );
 
@@ -45,50 +86,7 @@ var FieldAdder = React.createClass({
 			React.DOM.button({ key: 'b', onClick: this.createField }, 'OK' ),
 			React.DOM.a({ key: 'a', className: 'cancelField', onClick: this.handleCancel}, 'Cancel')
 		]);
-	},
-
-	componentDidUpdate: function( prevProps, prevState ){
-		if( !prevState.creating && this.state.creating ){
-			if( this.refs.keyInput )
-				this.refs.keyInput.focus();
-			else
-				this.refs.typeSelector.focus();
-		}
-	},
-
-	componentWillReceiveProps: function( newProps ){
-		this.setState({name: newProps.name});
-	},
-
-	handleCreate: function( e ){
-		e.preventDefault();
-		this.setState({creating: true});
-	},
-
-	handleCancel: function( e ){
-		e.preventDefault();
-		this.setState({creating: false});
-	},
-
-	changeType: function( e ){
-		this.setState({type: e.target.value});
-	},
-
-	changeKey: function( e ){
-		this.setState({name: e.target.value});
-	},
-
-	createField: function(){
-		this.setState({creating: false});
-
-		var value = TypeField.prototype.getComponents()[ this.state.type ].prototype.defaultValue;
-
-		this.props.onCreate( this.state.name, value, {type: this.state.type });
-	},
-
-	getTypes: function(){
-		return Object.keys( TypeField.prototype.getComponents() );
 	}
-});
+};
 
 module.exports = FieldAdder;
