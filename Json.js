@@ -33,8 +33,6 @@ if( flexboxClass ){
  */
 class Json extends React.Component {
 	constructor(props) {
-		super(props)
-
 		var me = this,
 		value = this.props.value,
 		listener
