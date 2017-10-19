@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 var React = require('react'),
 	Freezer = require('freezer-js'),
 	objectAssign = require('object-assign'),
@@ -42,7 +44,7 @@ var Json = React.createClass({
 	},
 
 	childContextTypes: {
-		typeDefaults: React.PropTypes.object
+		typeDefaults: PropTypes.object
 	},
 
 	getChildContext: function(){

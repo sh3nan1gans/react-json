@@ -1,5 +1,7 @@
 'use strict';
 
+import PropTypes from 'prop-types';
+
 var React = require('react'),
 	deepSettings = require('./deepSettings'),
 	objectAssign = require('object-assign')
@@ -14,7 +16,7 @@ var TypeField = React.createClass({
 	typeCheckOrder: [],
 
 	contextTypes: {
-		typeDefaults: React.PropTypes.object
+		typeDefaults: PropTypes.object
 	},
 
 	render: function() {
