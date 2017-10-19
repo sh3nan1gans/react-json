@@ -112,4 +112,4 @@ TypeField.registerType = function( name, Component, selectable ){
 		proto.typeCheckOrder.unshift( name );
 };
 
-module.exports = TypeField;
+export default TypeField;
