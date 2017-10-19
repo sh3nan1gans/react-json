@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import LeafMixin from '../../mixins/LeafField';
+import LeafMixin from '../../mixins/LeafFieldMixin';
 
 /**
  * Component for editing a password.

@@ -13,8 +13,7 @@ class TextField extends React.Component {
 
 		this.state = {
 			mixins: [LeafMixin],
-			defaultValue: '',
-			...props,
+			defaultValue: ''
 		}
 	}
 
