@@ -11,21 +11,23 @@ var typeCheckOrder = [];
 class TypeField extends React.Component {
 	constructor(props) {
 		super(props)
+		this.state = {
+			components: {},
+			hiddenTypes: [],
+			typeCheckOrder: [],
+
+			contextTypes: {
+				typeDefaults: PropTypes.object
+			},
+		}
 	}
 
-	components: {},
-  hiddenTypes: [],
-	typeCheckOrder: [],
 
-	contextTypes: {
-		typeDefaults: PropTypes.object
-	},
-
-	render: function() {
+	render() {
 		var Component = this.getComponent(),
 			settings = objectAssign(
 				{},
-				this.context.typeDefaults[ this.props.type ],
+				this.state.contextTypes.typeDefaults[ this.props.type ],
 				this.props.settings
 			)
 		;
@@ -41,39 +43,39 @@ class TypeField extends React.Component {
 		});
 	},
 
-  getComponents: function() {
-    if (this.hiddenTypes.length > 0) {
+  getComponents() {
+    if (this.state.hiddenTypes.length > 0) {
       var rtn = {};
-      for (var key in this.components) {
-        if (this.hiddenTypes.indexOf(key) === -1) {
-          rtn[key] = this.components[key];
+      for (var key in this.state.components) {
+        if (this.state.hiddenTypes.indexOf(key) === -1) {
+          rtn[key] = this.state.components[key];
         }
       }
       return rtn;
     } else {
-      return this.components;
+      return this.state.components;
     }
   },
 
-	getComponent: function(){
+	getComponent(){
 		var type = this.props.type;
 		if( !type )
 			type = this.guessType( this.props.value );
 
 		this.fieldType = type;
 
-		return this.components[ type ];
+		return this.state.components[ type ];
 	},
 
-	guessType: function( value ){
+	guessType( value ){
 		var type = false,
 			i = 0,
-			types = this.typeCheckOrder,
+			types = this.state.typeCheckOrder,
 			component
 		;
 
 		while( !type && i < types.length ){
-			component = this.components[ types[i] ].prototype;
+			component = this.state.components[ types[i] ].prototype;
 			if( component.isType && component.isType( value ) )
 				type = types[i++];
 			else
@@ -83,11 +85,11 @@ class TypeField extends React.Component {
 		return type || 'object';
 	},
 
-	getValidationErrors: function( jsonValue ){
+	getValidationErrors( jsonValue ){
 		return this.refs.field.getValidationErrors( jsonValue );
 	},
 
-	addDeepSettings: function( settings ){
+	addDeepSettings( settings ){
 		var parentSettings = this.props.parentSettings || {},
 			deep
 		;
