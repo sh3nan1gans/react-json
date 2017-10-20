@@ -100,7 +100,7 @@ TypeField.registerHiddenTypes = function(types) {
 }
 
 TypeField.registerType = function( name, Component, selectable ){
-	var proto = TypeField.prototype;
+	var proto = TypeField.prototype.constructor;
 	proto.components[ name ] = Component;
 	if( selectable )
 		proto.typeCheckOrder.unshift( name );
