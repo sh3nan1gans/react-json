@@ -9,52 +9,40 @@ var components = {};
 var typeCheckOrder = [];
 
 class TypeField extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			components: {},
-			hiddenTypes: [],
-			typeCheckOrder: [],
 
-			contextTypes: {
-				typeDefaults: PropTypes.object
-			}
-		}
-	}
-
-	getComponents() {
-		if (this.state.hiddenTypes.length > 0) {
+	getComponents = () => {
+		if (this.hiddenTypes.length > 0) {
 			var rtn = {};
-			for (var key in this.state.components) {
-				if (this.state.hiddenTypes.indexOf(key) === -1) {
-					rtn[key] = this.state.components[key];
+			for (var key in this.components) {
+				if (this.hiddenTypes.indexOf(key) === -1) {
+					rtn[key] = this.components[key];
 				}
 			}
 			return rtn;
 		} else {
-			return this.state.components;
+			return this.components;
 		}
 	}
 
-	getComponent() {
+	getComponent = () => {
 		var type = this.props.type;
 		if( !type )
 		type = this.guessType( this.props.value );
 
 		this.fieldType = type;
 
-		return this.state.components[ type ];
+		return this.components[ type ];
 	}
 
-	guessType( value ) {
+	guessType = ( value ) => {
 		var type = false,
 		i = 0,
-		types = this.state.typeCheckOrder,
+		types = this.typeCheckOrder,
 		component
 		;
 
 		while( !type && i < types.length ){
-			component = this.state.components[ types[i] ].prototype;
+			component = this.components[ types[i] ].prototype;
 			if( component.isType && component.isType( value ) )
 			type = types[i++];
 			else
@@ -64,11 +52,11 @@ class TypeField extends React.Component {
 		return type || 'object';
 	}
 
-	getValidationErrors( jsonValue ) {
+	getValidationErrors = ( jsonValue ) => {
 		return this.refs.field.getValidationErrors( jsonValue );
 	}
 
-	addDeepSettings ( settings ) {
+	addDeepSettings = ( settings ) => {
 		var parentSettings = this.props.parentSettings || {},
 		deep
 		;
@@ -99,6 +87,12 @@ class TypeField extends React.Component {
 			ref: 'field'
 		});
 	}
+}
+
+TypeField.components = {};
+TypeField.typeCheckOrder = [];
+TypeField.contextTypes = {
+	typeDefaults: PropTypes.object
 }
 
 TypeField.registerHiddenTypes = function(types) {
