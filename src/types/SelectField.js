@@ -55,4 +55,4 @@ class SelectType extends React.Component {
 	}
 };
 
-module.exports = SelectType;
+export default SelectType;

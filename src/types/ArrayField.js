@@ -101,4 +101,4 @@ class ArrayField extends React.Component {
 
 };
 
-module.exports = ArrayField;
+export default ArrayField;

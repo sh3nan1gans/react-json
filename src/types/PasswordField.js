@@ -44,4 +44,4 @@ class PasswordField extends React.Component {
 	}
 };
 
-module.exports = PasswordField;
+export default PasswordField;

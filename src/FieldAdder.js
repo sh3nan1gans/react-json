@@ -91,4 +91,4 @@ class FieldAdder extends React.Component {
 	}
 };
 
-module.exports = FieldAdder;
+export default FieldAdder;

@@ -38,4 +38,4 @@ class BooleanField extends React.Component {
 	}
 };
 
-module.exports = BooleanField;
+export default BooleanField;

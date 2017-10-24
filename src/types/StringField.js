@@ -32,4 +32,4 @@ class StringField extends React.Component {
 
 };
 
-module.exports = StringField;
+export default StringField;

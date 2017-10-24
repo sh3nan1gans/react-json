@@ -43,4 +43,4 @@ class NullField extends React.Component {
 	}
 });
 
-module.exports = NullField;
+export default NullField;

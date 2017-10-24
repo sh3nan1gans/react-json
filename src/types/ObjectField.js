@@ -203,4 +203,4 @@ class ObjectField extends React.Component {
 	}
 };
 
-module.exports = ObjectField;
+export default ObjectField;

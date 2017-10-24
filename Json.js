@@ -185,4 +185,4 @@ Json.registerType( 'boolean', BooleanField, true );
 Json.registerType( 'password', PasswordField );
 Json.registerType( 'select', SelectField );
 
-module.exports = Json;
+export default Json;
